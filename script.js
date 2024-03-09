@@ -2,6 +2,19 @@ document.addEventListener("DOMContentLoaded", function() {
     const inputBox = document.getElementById("input-box");
     const addTaskBtn = document.getElementById("add-task-btn");
     const listContainer = document.getElementById("list-container");
+    const clockElement = document.getElementById("clock");
+
+
+    function updateClock() {
+        const now = new Date();
+        let hours = now.getHours();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+        clockElement.textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
+    }
+    setInterval(updateClock, 1000);
 
     addTaskBtn.addEventListener("click", addTask);
     listContainer.addEventListener("click", handleListClick);
@@ -25,6 +38,8 @@ document.addEventListener("DOMContentLoaded", function() {
     function handleListClick(event) {
         if (event.target.tagName === "LI") {
             event.target.classList.toggle("checked");
+            const checkedItems = Array.from(listContainer.querySelectorAll(".checked"));
+            checkedItems.forEach(item => listContainer.appendChild(item));
             saveData();
         } else if (event.target.tagName === "SPAN") {
             event.target.parentElement.remove();
@@ -44,4 +59,5 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     loadSavedData();
+    updateClock(); 
 });
